@@ -305,8 +305,15 @@ function onClose(){
 function connect(){
   clearTimeout(reconnectTimer);
   if(ws){try{ws.onclose=null;ws.close()}catch(e){}}
+  ws=null;
+  const url=wsUrl(cfg.base);
+  // HTTPS-Seite + ws:// = vom Browser blockiert (Mixed Content) — sofort melden, nicht endlos retryn
+  if(location.protocol==="https:"&&url.startsWith("ws://")){
+    setStatus("err","Blockiert: HTTPS-Seite darf keine unsichere ws://-Verbindung öffnen. Bitte eine https://-HA-Adresse eingeben (z. B. Tailscale-Addon mit TLS)");
+    return;
+  }
   setStatus("warn","Verbinde …");
-  try{ws=new WebSocket(wsUrl(cfg.base))}
+  try{ws=new WebSocket(url)}
   catch(e){setStatus("err","Ungültige Adresse");return}
   ws.onopen=onOpen;ws.onmessage=onMessage;ws.onclose=onClose;
 }
