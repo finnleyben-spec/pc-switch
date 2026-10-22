@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f2efe7">
+<title>PC Switch</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --paper:#f2efe7;
+    --ink:#1a1815;
+    --ink-soft:#5c564c;
+    --line:#d8d2c4;
+    --accent:#b4552d;
+    --ok:#4a7c59;
+    --warn:#b08a2e;
+    --err:#a33a2a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;
+    min-height:100dvh;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .serif{font-family:"New York",Georgia,"Times New Roman",serif}
+
+  header{
+    display:flex;align-items:baseline;justify-content:space-between;
+    padding:28px 28px 0;
+  }
+  h1{font-size:22px;font-weight:500;letter-spacing:.02em}
+  .ver{font-size:11px;color:var(--ink-soft);letter-spacing:.08em}
+
+  .rule{height:1px;background:var(--line);margin:18px 28px 0}
+
+  /* ---------- status ---------- */
+  .status{
+    display:flex;align-items:center;gap:8px;
+    margin-top:20px;font-size:12px;letter-spacing:.06em;color:var(--ink-soft);
+    text-transform:uppercase;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-soft);flex:none}
+  .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.err{background:var(--err)}
+
+  /* ---------- buttons ---------- */
+  .switches{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+    margin-top:34px;
+  }
+  .switch{
+    appearance:none;border:none;cursor:pointer;
+    border-radius:4px;
+    padding:34px 10px 28px;
+    display:flex;flex-direction:column;align-items:center;gap:14px;
+    font:inherit;color:inherit;
+    transition:transform .06s ease;
+    user-select:none;-webkit-user-select:none;
+  }
+  .switch:active{transform:translateY(2px)}
+  .switch .glyph{
+    width:64px;height:64px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .switch .label{
+    font-size:15px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;
+  }
+  .switch .sub{font-size:11px;opacity:.62;letter-spacing:.05em;min-height:14px}
+  .switch[disabled]{opacity:.45;cursor:default}
+
+  .sw-on{
+    background:var(--ink);color:var(--paper);
+    box-shadow:0 2px 0 rgba(26,24,21,.9), inset 0 0 0 1px rgba(242,239,231,.12);
+  }
+  .sw-on .glyph{border:1.5px solid rgba(242,239,231,.8)}
+  .sw-off{
+    background:var(--paper);color:var(--ink);
+    box-shadow:inset 0 0 0 1.5px var(--ink);
+  }
+  .sw-off .glyph{border:1.5px solid var(--ink)}
+
+  /* ---------- entity cards ---------- */
+  .entities{
+    margin-top:auto;
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+    padding:26px 0 20px;
+  }
+  .entity{border-top:1px solid var(--line);padding-top:10px}
+  .entity .fn{font-size:12px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .entity .ts{font-size:11px;color:var(--ink-soft);margin-top:4px;font-variant-numeric:tabular-nums}
+  .entity .tag{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+
+  footer{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:0 28px 22px;
+    font-size:11px;color:var(--ink-soft);letter-spacing:.05em;
+  }
+  footer button{
+    appearance:none;border:none;background:none;color:var(--ink-soft);
+    font:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    cursor:pointer;padding:4px 0;border-bottom:1px solid var(--line);
+  }
+  footer button:active{color:var(--ink)}
+
+  /* ---------- setup ---------- */
+  .setup{display:none;flex:1;flex-direction:column;padding:0 28px;overflow-y:auto}
+  .setup.show{display:flex}
+  .setup h2{font-size:18px;font-weight:500;margin-top:28px;letter-spacing:.02em}
+  .setup p.hint{font-size:13px;color:var(--ink-soft);line-height:1.55;margin-top:10px}
+  .field{margin-top:22px}
+  .field label{
+    display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:8px;
+  }
+  .field input{
+    width:100%;font:14px/1.4 inherit;
+    padding:12px 14px;background:#fff;
+    border:1px solid var(--line);border-radius:3px;color:var(--ink);
+    outline:none;
+  }
+  .field input:focus{border-color:var(--ink)}
+  .btn{
+    appearance:none;border:none;cursor:pointer;font:inherit;
+    margin-top:28px;padding:15px 20px;border-radius:4px;
+    background:var(--ink);color:var(--paper);
+    font-size:14px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+  }
+  .btn:disabled{opacity:.5}
+  .testmsg{margin-top:16px;font-size:13px;line-height:1.5;min-height:18px}
+  .testmsg.ok{color:var(--ok)} .testmsg.err{color:var(--err)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1 class="serif">PC Switch</h1>
+  <span class="ver">v1.0.0</span>
+</header>
+<div class="rule"></div>
+
+<!-- ============ SETUP ============ -->
+<div class="setup" id="setup">
+  <h2 class="serif">Einrichtung</h2>
+  <p class="hint">
+    Adresse und Access-Token deiner Home-Instanz sowie die zwei Entities, die
+    den PC hoch- und runterfahren. Alles wird nur lokal auf diesem Gerät
+    gespeichert — es verlässt das Handy nirgendwohin.
+  </p>
+
+  <div class="field">
+    <label for="fBase">Home-Adresse</label>
+    <input id="fBase" type="text" autocomplete="off" spellcheck="false"
+      placeholder="z. B. 192.168.0.205:8123 oder https://ha.mein-netz.ts.net">
+  </div>
+  <div class="field">
+    <label for="fToken">Access-Token (Long-Lived)</label>
+    <input id="fToken" type="password" autocomplete="off" placeholder="eyJhbGciOi…">
+  </div>
+  <div class="field">
+    <label for="fOn">Entity — Hochfahren (Wake)</label>
+    <input id="fOn" type="text" autocomplete="off" spellcheck="false" placeholder="z. B. button.buro_wake_pc_buro">
+  </div>
+  <div class="field">
+    <label for="fOff">Entity — Herunterfahren</label>
+    <input id="fOff" type="text" autocomplete="off" spellcheck="false" placeholder="z. B. input_button.pc_ausschalten">
+  </div>
+
+  <button class="btn" id="btnTest">Speichern &amp; Verbinden</button>
+  <div class="testmsg" id="testmsg"></div>
+</div>
+
+<!-- ============ MAIN ============ -->
+<div id="main" style="display:none;flex:1;flex-direction:column;padding:0 28px">
+  <div class="status">
+    <span class="dot" id="dot"></span>
+    <span id="statusText">Verbinde …</span>
+  </div>
+
+  <div class="switches">
+    <button class="switch sw-on" id="btnOn">
+      <span class="glyph">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M12 3v8"/><path d="M6.3 6.5a8 8 0 1 0 11.4 0"/>
+        </svg>
+      </span>
+      <span class="label">An</span>
+      <span class="sub" id="subOn">—</span>
+    </button>
+    <button class="switch sw-off" id="btnOff">
+      <span class="glyph">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M12 4v7"/><path d="M5.9 7a7.5 7.5 0 1 0 12.2 0"/>
+          <line x1="4" y1="20" x2="20" y2="20"/>
+        </svg>
+      </span>
+      <span class="label">Aus</span>
+      <span class="sub" id="subOff">—</span>
+    </button>
+  </div>
+
+  <div class="entities">
+    <div class="entity">
+      <div class="tag">Wake</div>
+      <div class="fn" id="fnOn">—</div>
+      <div class="ts" id="tsOn">—</div>
+    </div>
+    <div class="entity">
+      <div class="tag">Shutdown</div>
+      <div class="fn" id="fnOff">—</div>
+      <div class="ts" id="tsOff">—</div>
+    </div>
+  </div>
+</div>
+
+<footer id="foot" style="display:none">
+  <span id="footBase">—</span>
+  <button id="btnSetup">Einstellungen</button>
+</footer>
+
+<script>
+"use strict";
+const CFG_KEY="pcswitch.cfg.v1";
+const $=id=>document.getElementById(id);
+let ws=null, idc=0, pending=new Map(), connected=false, reconnectTimer=null, cfg=null;
+const stateCache={};
+
+function loadCfg(){try{const c=JSON.parse(localStorage.getItem(CFG_KEY));return c&&c.base?c:null}catch(e){return null}}
+function saveCfg(c){localStorage.setItem(CFG_KEY,JSON.stringify(c))}
+
+function wsUrl(base){
+  base=(base||"").trim();
+  if(/^https:\/\//i.test(base)) base="wss://"+base.slice(8);
+  else if(/^http:\/\//i.test(base)) base="ws://"+base.slice(7);
+  else if(!/^wss?:\/\//i.test(base)) base="ws://"+base;
+  return base.replace(/\/+$/,"")+"/api/websocket";
+}
+function entityDomain(e){return (e||"").split(".")[0]||""}
+
+function setStatus(cls,txt){
+  $("dot").className="dot "+cls;
+  $("statusText").textContent=txt;
+  ["btnOn","btnOff"].forEach(b=>$(b).disabled=!(cls==="ok"));
+}
+
+function fmtTs(iso){
+  if(!iso)return "—";
+  const d=new Date(iso);
+  if(isNaN(d))return iso;
+  return d.toLocaleString("de-DE",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function showEntity(id,fnEl,tsEl){
+  const s=stateCache[id];
+  if(!s){fnEl.textContent="—";tsEl.textContent="—";return}
+  fnEl.textContent=s.attributes&&s.attributes.friendly_name?s.attributes.friendly_name:id;
+  tsEl.textContent=fmtTs(s.state);
+}
+
+function onStateMessage(m){
+  if(m.type!=="event")return;
+  const ev=m.event;
+  if(!ev||ev.event_type!=="state_changed")return;
+  const st=ev.data&&ev.data.new_state;
+  if(!st)return;
+  const id=st.entity_id;
+  if(id===cfg.on||id===cfg.off){
+    stateCache[id]=st;
+    if(id===cfg.on){showEntity(id,$("fnOn"),$("tsOn"));$("subOn").textContent="Gesendet"}
+    else{showEntity(id,$("fnOff"),$("tsOff"));$("subOff").textContent="Gesendet"}
+  }
+}
+
+function onOpen(){
+  ws.send(JSON.stringify({type:"auth",access_token:cfg.token}));
+}
+function onMessage(ev){
+  let m;try{m=JSON.parse(ev.data)}catch(e){return}
+  if(m.type==="auth_ok"){
+    connected=true;
+    setStatus("ok","Verbunden");
+    refreshStates();
+    ws.send(JSON.stringify({id:++idc,type:"subscribe_events",event_type:"state_changed"}));
+  }else if(m.type==="auth_invalid"){
+    setStatus("err","Token ungültig");
+  }else if(m.id&&pending.has(m.id)){
+    const p=pending.get(m.id);pending.delete(m.id);
+    m.success?p.resolve(m.result):p.reject(new Error(m.error&&m.error.message||"Fehler"));
+  }else{
+    onStateMessage(m);
+  }
+}
+function onClose(){
+  connected=false;
+  if(!cfg)return;
+  setStatus("err","Verbindung getrennt");
+  clearTimeout(reconnectTimer);
+  reconnectTimer=setTimeout(connect,2500);
+}
+
+function connect(){
+  clearTimeout(reconnectTimer);
+  if(ws){try{ws.onclose=null;ws.close()}catch(e){}}
+  setStatus("warn","Verbinde …");
+  try{ws=new WebSocket(wsUrl(cfg.base))}
+  catch(e){setStatus("err","Ungültige Adresse");return}
+  ws.onopen=onOpen;ws.onmessage=onMessage;ws.onclose=onClose;
+}
+
+function wsRequest(type,payload){
+  return new Promise((resolve,reject)=>{
+    const id=++idc;
+    pending.set(id,{resolve,reject});
+    ws.send(JSON.stringify(Object.assign({id,type},payload||{})));
+    setTimeout(()=>{if(pending.has(id)){pending.delete(id);reject(new Error("Timeout"))}},10000);
+  });
+}
+
+async function refreshStates(){
+  try{
+    const res=await wsRequest("get_states");
+    for(const s of res){
+      if(s.entity_id===cfg.on||s.entity_id===cfg.off)stateCache[s.entity_id]=s;
+    }
+    showEntity(cfg.on,$("fnOn"),$("tsOn"));
+    showEntity(cfg.off,$("fnOff"),$("tsOff"));
+    $("subOn").textContent="—";$("subOff").textContent="—";
+  }catch(e){}
+}
+
+async function press(entity,subEl){
+  if(!connected||!cfg)return;
+  const dom=entityDomain(entity);
+  if(dom!=="button"&&dom!=="input_button"){subEl.textContent="Unbekannte Domain";return}
+  subEl.textContent="…";
+  try{
+    await wsRequest("call_service",{domain:dom,service:"press",service_data:{entity_id:entity}});
+  }catch(e){
+    subEl.textContent="Fehler";
+    setTimeout(()=>{subEl.textContent="—"},4000);
+    return;
+  }
+  setTimeout(()=>{subEl.textContent="—"},4000);
+}
+
+/* ---------- setup UI ---------- */
+function showSetup(){
+  $("setup").classList.add("show");
+  $("main").style.display="none";
+  $("foot").style.display="none";
+  if(cfg){
+    $("fBase").value=cfg.base;
+    $("fToken").value=cfg.token;
+    $("fOn").value=cfg.on;
+    $("fOff").value=cfg.off;
+  }
+}
+function showMain(){
+  $("setup").classList.remove("show");
+  $("main").style.display="flex";
+  $("foot").style.display="flex";
+  $("footBase").textContent=cfg?cfg.base:"";
+}
+
+function rawWs(url,token,timeoutMs){
+  return new Promise((resolve,reject)=>{
+    const t=new WebSocket(url);
+    const timer=setTimeout(()=>{try{t.close()}catch(e){}reject(new Error("Timeout"))},timeoutMs);
+    t.onopen=()=>t.send(JSON.stringify({type:"auth",access_token:token}));
+    t.onmessage=e=>{
+      let m;try{m=JSON.parse(e.data)}catch(x){return}
+      if(m.type==="auth_ok")resolve(t);
+      else if(m.type==="auth_invalid"){clearTimeout(timer);try{t.close()}catch(x){}reject(new Error("Token ungültig"))}
+    };
+    t.onerror=()=>{clearTimeout(timer);try{t.close()}catch(x){}reject(new Error("Keine Verbindung"))};
+  });
+}
+
+async function doTest(){
+  const base=$("fBase").value.trim(),token=$("fToken").value.trim(),
+        on=$("fOn").value.trim(),off=$("fOff").value.trim(),
+        msg=$("testmsg");
+  msg.className="testmsg";
+  if(!base||!token||!on||!off){msg.textContent="Alle Felder ausfüllen.";msg.classList.add("err");return}
+  $("btnTest").disabled=true;
+  msg.textContent="Verbinde …";
+  try{
+    const url=wsUrl(base);
+    const t=await rawWs(url,token,10000);
+    try{
+      const res=await new Promise((resolve,reject)=>{
+        const id=1;
+        t.send(JSON.stringify({id,type:"get_states"}));
+        t.onmessage=e=>{
+          let m;try{m=JSON.parse(e.data)}catch(x){return}
+          if(m.id===id){m.success?resolve(m.result):reject(new Error("get_states fehlgeschlagen"))}
+        };
+        setTimeout(()=>reject(new Error("Timeout")),10000);
+      });
+      for(const e of [on,off]){
+        const dom=entityDomain(e);
+        if(dom!=="button"&&dom!=="input_button")throw new Error("Entity \""+e+"\": Domain "+dom+" (erwartet: button / input_button)");
+        if(!res.find(s=>s.entity_id===e))throw new Error("Entity nicht gefunden: "+e);
+      }
+    }finally{try{t.close()}catch(e){}}
+    const testCfg={base,token,on,off};
+    saveCfg(testCfg);cfg=testCfg;
+    msg.textContent="Verbunden — beide Entities gefunden.";
+    msg.classList.add("ok");
+    showMain();
+    connect();
+  }catch(e){
+    msg.textContent=e.message||String(e);
+    msg.classList.add("err");
+  }finally{
+    $("btnTest").disabled=false;
+  }
+}
+
+/* ---------- init ---------- */
+cfg=loadCfg();
+if(cfg){showMain();connect()}else{showSetup()}
+$("btnTest").onclick=doTest;
+$("btnSetup").onclick=showSetup;
+$("btnOn").onclick=()=>press(cfg.on,$("subOn"));
+$("btnOff").onclick=()=>press(cfg.off,$("subOff"));
+
+if("serviceWorker"in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
