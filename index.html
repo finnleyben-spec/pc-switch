@@ -428,9 +428,28 @@ async function doTest(){
   }
 }
 
+/* ---------- Setup per Link (?cfg=Base64-JSON) ---------- */
+// Ermöglicht Einrichtung ohne Tippen: Link/QR mit {base,token,on,off} öffnen.
+// Wird NUR in die Felder gelegt — gespeichert erst nach SPEICHERN & VERBINDEN.
+function applyCfgFromUrl(){
+  try{
+    const q=new URLSearchParams(location.search).get("cfg");
+    if(!q)return;
+    const raw=atob(q.replace(/-/g,"+").replace(/_/g,"/"));
+    const c=JSON.parse(raw);
+    if(!c||!c.base||!c.token)return;
+    showSetup();
+    $("fBase").value=c.base;
+    $("fToken").value=c.token;
+    if(c.on)$("fOn").value=c.on;
+    if(c.off)$("fOff").value=c.off;
+  }catch(e){}
+}
+
 /* ---------- init ---------- */
 cfg=loadCfg();
 if(cfg){showMain();connect()}else{showSetup()}
+applyCfgFromUrl();
 $("btnTest").onclick=doTest;
 $("btnSetup").onclick=showSetup;
 $("btnOn").onclick=()=>press(cfg.on,$("subOn"));
