@@ -23,7 +23,7 @@ self.addEventListener("fetch", (e) => {
   // Download-Flow (application/vnd.android.package-archive).
   if (url.pathname.endsWith(".apk")) return;
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, {cache:"no-cache"})
       .then((res) => {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(e.request, copy));
