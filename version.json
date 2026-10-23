@@ -1,8 +1,8 @@
 {
   "apk": {
-    "version_name": "2.0.3",
-    "version_code": 15,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.3.apk",
-    "notes": "v2.0.3: VPN-Detection Fix, Power-Toggle Switch, Version-Display in Settings."
+    "version_name": "2.0.4",
+    "version_code": 16,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.4.apk",
+    "notes": "v2.0.4: Update-Flow Fix."
   }
 }
