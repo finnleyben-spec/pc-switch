@@ -261,7 +261,7 @@
 <script>
 "use strict";
 const CFG_KEY="pcswitch.cfg.v1";
-const PWA_VERSION="1.2.6";
+const PWA_VERSION="1.2.7";
 /* Update-Check: Der APK-Wrapper injiziert ?apk=<versionName>&vc=<versionCode> in
    die PWA-URL. VOR history.replaceState auslesen (autoPress/applyCfgFromUrl
    löschen den Querystring). */
@@ -272,6 +272,15 @@ const $=id=>document.getElementById(id);
 let ws=null, idc=0, pending=new Map(), connected=false, reconnectTimer=null, probeTimer=null, cfg=null;
 let mode=null; // "lan" | "remote" | "offline"
 const stateCache={};
+
+/* Version-Badge: laufende Version anzeigen (APK-Modus: injizierter vc-Param,
+   PWA/Browser: PWA_VERSION). Wird beim Start gesetzt, nie bei Update-Check. */
+(function setVerBadge(){
+  const el=document.querySelector(".ver");
+  if(!el)return;
+  const v=(APK_MODE&&_q0.get("apk"))?_q0.get("apk"):PWA_VERSION;
+  el.textContent="v"+v;
+})();
 
 function loadCfg(){
   try{
