@@ -1,21 +1,70 @@
 {
   "apk": {
-    "version_name": "2.0.9",
-    "version_code": 21,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.9.apk",
-    "notes": "v2.0.9: Update-Fehlerbehandlung verbessert.",
+    "version_name": "2.0.10",
+    "version_code": 22,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.10.apk",
+    "notes": "v2.0.10: Verbesserte Lesbarkeit (hellerer Text, dunklere GlassCards).",
     "changelog": [
-      {"version": "2.0.9", "date": "2026-10-23", "notes": "Update-Fehlerbehandlung verbessert."},
-      {"version": "2.0.8", "date": "2026-10-23", "notes": "Verbesserte Lesbarkeit und GlassCard-Design."},
-      {"version": "2.0.7", "date": "2026-10-23", "notes": "Alle Einstellungen + Setup-Fenster."},
-      {"version": "2.0.6", "date": "2026-10-23", "notes": "Netzwerk-Einstellungen im SettingsScreen."},
-      {"version": "2.0.5", "date": "2026-10-23", "notes": "SettingsScreen mit Update-Prüfung, Versions-Anzeige, Changelog-Dialog, Retry-Button, Rollback-Support."},
-      {"version": "2.0.4", "date": "2026-10-23", "notes": "Update-Flow Fix."},
-      {"version": "2.0.3", "date": "2026-10-23", "notes": "VPN-Detection Fix, Power-Toggle Switch, Version-Display in Settings"},
-      {"version": "2.0.2", "date": "2026-10-23", "notes": "Dark Cyber Gothic Design, Squircles, Glassmorphism, Back-Button Fix, Update-Button Animation"},
-      {"version": "2.0.1", "date": "2026-10-23", "notes": "Connect-to-Home bei Offline und Remote, Heimnetz-Trennen bei VPN, Entity-Cards entfernt, Update-Button in Einstellungen"},
-      {"version": "2.0.0", "date": "2026-10-23", "notes": "APK-only, PWA removed. Native Android app with Connect-to-Home, HA-WebSocket client, self-update."},
-      {"version": "1.2.8", "date": "2026-10-23", "notes": "APK mit clearCache-on-cold-start (stale SW blockierte Update-Button)"}
+      {
+        "version": "2.0.10",
+        "date": "2026-10-23",
+        "notes": "Verbesserte Lesbarkeit (hellerer Text, dunklere GlassCards)."
+      },
+      {
+        "version": "2.0.9",
+        "date": "2026-10-23",
+        "notes": "Update-Fehlerbehandlung verbessert."
+      },
+      {
+        "version": "2.0.8",
+        "date": "2026-10-23",
+        "notes": "Verbesserte Lesbarkeit und GlassCard-Design."
+      },
+      {
+        "version": "2.0.7",
+        "date": "2026-10-23",
+        "notes": "Alle Einstellungen + Setup-Fenster."
+      },
+      {
+        "version": "2.0.6",
+        "date": "2026-10-23",
+        "notes": "Netzwerk-Einstellungen im SettingsScreen."
+      },
+      {
+        "version": "2.0.5",
+        "date": "2026-10-23",
+        "notes": "SettingsScreen mit Update-Pr\u00fcfung, Versions-Anzeige, Changelog-Dialog, Retry-Button, Rollback-Support."
+      },
+      {
+        "version": "2.0.4",
+        "date": "2026-10-23",
+        "notes": "Update-Flow Fix."
+      },
+      {
+        "version": "2.0.3",
+        "date": "2026-10-23",
+        "notes": "VPN-Detection Fix, Power-Toggle Switch, Version-Display in Settings"
+      },
+      {
+        "version": "2.0.2",
+        "date": "2026-10-23",
+        "notes": "Dark Cyber Gothic Design, Squircles, Glassmorphism, Back-Button Fix, Update-Button Animation"
+      },
+      {
+        "version": "2.0.1",
+        "date": "2026-10-23",
+        "notes": "Connect-to-Home bei Offline und Remote, Heimnetz-Trennen bei VPN, Entity-Cards entfernt, Update-Button in Einstellungen"
+      },
+      {
+        "version": "2.0.0",
+        "date": "2026-10-23",
+        "notes": "APK-only, PWA removed. Native Android app with Connect-to-Home, HA-WebSocket client, self-update."
+      },
+      {
+        "version": "1.2.8",
+        "date": "2026-10-23",
+        "notes": "APK mit clearCache-on-cold-start (stale SW blockierte Update-Button)"
+      }
     ]
   }
 }
