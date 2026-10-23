@@ -1,9 +1,8 @@
 {
-  "pwa_version": "1.2.8",
   "apk": {
-    "version_name": "1.2.8",
-    "version_code": 11,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v1.2.8.apk",
-    "notes": "Cold Start: WebView-HTTP-Cache leeren (stale Service Worker blockierte sonst den Update-Button); frischer Inhalt + frischer sw.js garantiert"
+    "version_name": "2.0.0",
+    "version_code": 12,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.0.apk",
+    "notes": "v2.0.0: native Android App (kein WebView). Connect-to-Home (Tailscale-Disconnect + OpenVPN-Connect), HA-WebSocket-Client, Setup-Screen, Self-Update."
   }
 }
