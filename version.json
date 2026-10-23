@@ -1,10 +1,11 @@
 {
   "apk": {
-    "version_name": "2.0.8",
-    "version_code": 20,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.8.apk",
-    "notes": "v2.0.8: Verbesserte Lesbarkeit und GlassCard-Design.",
+    "version_name": "2.0.9",
+    "version_code": 21,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.9.apk",
+    "notes": "v2.0.9: Update-Fehlerbehandlung verbessert.",
     "changelog": [
+      {"version": "2.0.9", "date": "2026-10-23", "notes": "Update-Fehlerbehandlung verbessert."},
       {"version": "2.0.8", "date": "2026-10-23", "notes": "Verbesserte Lesbarkeit und GlassCard-Design."},
       {"version": "2.0.7", "date": "2026-10-23", "notes": "Alle Einstellungen + Setup-Fenster."},
       {"version": "2.0.6", "date": "2026-10-23", "notes": "Netzwerk-Einstellungen im SettingsScreen."},
