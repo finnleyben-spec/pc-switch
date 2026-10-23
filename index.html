@@ -40,14 +40,18 @@
 
   .rule{height:1px;background:var(--line);margin:18px 28px 0}
 
-  /* ---------- status ---------- */
+  /* ---------- status / mode ---------- */
   .status{
-    display:flex;align-items:center;gap:8px;
-    margin-top:20px;font-size:12px;letter-spacing:.06em;color:var(--ink-soft);
-    text-transform:uppercase;
+    display:flex;align-items:center;gap:10px;
+    margin-top:24px;font-size:14px;letter-spacing:.08em;color:var(--ink);
+    text-transform:uppercase;font-weight:600;
   }
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--ink-soft);flex:none}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--ink-soft);flex:none}
   .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.err{background:var(--err)}
+  .status .note{
+    margin-left:auto;font-size:10px;letter-spacing:.1em;color:var(--ink-soft);
+    font-weight:400;text-transform:none;
+  }
 
   /* ---------- buttons ---------- */
   .switches{
@@ -118,7 +122,8 @@
     display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--ink-soft);margin-bottom:8px;
   }
-  .field input{
+  .field .fhint{font-size:11px;color:var(--ink-soft);margin-top:6px;line-height:1.45;letter-spacing:.02em;text-transform:none}
+  .field input, .field select{
     width:100%;font:14px/1.4 inherit;
     padding:12px 14px;background:#fff;
     border:1px solid var(--line);border-radius:3px;color:var(--ink);
@@ -140,7 +145,7 @@
 
 <header>
   <h1 class="serif">PC Switch</h1>
-  <span class="ver">v1.0.0</span>
+  <span class="ver">v1.1.0</span>
 </header>
 <div class="rule"></div>
 
@@ -148,15 +153,24 @@
 <div class="setup" id="setup">
   <h2 class="serif">Einrichtung</h2>
   <p class="hint">
-    Adresse und Access-Token deiner Home-Instanz sowie die zwei Entities, die
-    den PC hoch- und runterfahren. Alles wird nur lokal auf diesem Gerät
-    gespeichert — es verlässt das Handy nirgendwohin.
+    Access-Token und die zwei Entities für Hoch-/Runterfahren. Zusätzlich kannst
+    du die Heim-Netz-Adresse deiner Home-Instanz angeben: Im WLAN zu Hause
+    verbindet sich die App dann direkt über das LAN — und „An“ funktioniert
+    auch, wenn der PC aus ist. Alles wird nur lokal auf diesem Gerät
+    gespeichert.
   </p>
 
   <div class="field">
-    <label for="fBase">Home-Adresse</label>
+    <label for="fLan">Home-Adresse · Heim-Netz (LAN)</label>
+    <input id="fLan" type="text" autocomplete="off" spellcheck="false"
+      placeholder="z. B. 192.168.0.205:8123">
+    <div class="fhint">Im WLAN zu Hause direkter Pfad — Wake funktioniert hier auch mit ausgeschaltetem PC.</div>
+  </div>
+  <div class="field">
+    <label for="fBase">Home-Adresse · Remote (Relay)</label>
     <input id="fBase" type="text" autocomplete="off" spellcheck="false"
-      placeholder="z. B. 192.168.0.205:8123 oder https://ha.mein-netz.ts.net">
+      placeholder="z. B. https://100.106.82.86 oder ha.mein-netz.ts.net">
+    <div class="fhint">Von unterwegs über das TLS-Relay. Läuft auf dem PC — ist offline, wenn der PC aus ist.</div>
   </div>
   <div class="field">
     <label for="fToken">Access-Token (Long-Lived)</label>
@@ -170,6 +184,15 @@
     <label for="fOff">Entity — Herunterfahren</label>
     <input id="fOff" type="text" autocomplete="off" spellcheck="false" placeholder="z. B. input_button.pc_ausschalten">
   </div>
+  <div class="field">
+    <label for="fMode">Verbindungsmodus</label>
+    <select id="fMode">
+      <option value="auto">Automatisch (empfohlen)</option>
+      <option value="lan">Nur Heim-Netz (LAN)</option>
+      <option value="remote">Nur Remote (Relay)</option>
+    </select>
+    <div class="fhint">Automatisch: zu Hause LAN (Wake immer), unterwegs Relay.</div>
+  </div>
 
   <button class="btn" id="btnTest">Speichern &amp; Verbinden</button>
   <div class="testmsg" id="testmsg"></div>
@@ -179,11 +202,12 @@
 <div id="main" style="display:none;flex:1;flex-direction:column;padding:0 28px">
   <div class="status">
     <span class="dot" id="dot"></span>
-    <span id="statusText">Verbinde …</span>
+    <span id="statusText">Suche Pfad …</span>
+    <span class="note" id="modeNote"></span>
   </div>
 
   <div class="switches">
-    <button class="switch sw-on" id="btnOn">
+    <button class="switch sw-on" id="btnOn" disabled>
       <span class="glyph">
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
           <path d="M12 3v8"/><path d="M6.3 6.5a8 8 0 1 0 11.4 0"/>
@@ -192,7 +216,7 @@
       <span class="label">An</span>
       <span class="sub" id="subOn">—</span>
     </button>
-    <button class="switch sw-off" id="btnOff">
+    <button class="switch sw-off" id="btnOff" disabled>
       <span class="glyph">
         <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
           <path d="M12 4v7"/><path d="M5.9 7a7.5 7.5 0 1 0 12.2 0"/>
@@ -227,11 +251,19 @@
 "use strict";
 const CFG_KEY="pcswitch.cfg.v1";
 const $=id=>document.getElementById(id);
-let ws=null, idc=0, pending=new Map(), connected=false, reconnectTimer=null, cfg=null;
+let ws=null, idc=0, pending=new Map(), connected=false, reconnectTimer=null, probeTimer=null, cfg=null;
+let mode=null; // "lan" | "remote" | "offline"
 const stateCache={};
 
-function loadCfg(){try{const c=JSON.parse(localStorage.getItem(CFG_KEY));return c&&c.base?c:null}catch(e){return null}}
+function loadCfg(){
+  try{
+    const c=JSON.parse(localStorage.getItem(CFG_KEY));
+    if(c&&(c.base||c.lanBase))return c;
+  }catch(e){}
+  return null;
+}
 function saveCfg(c){localStorage.setItem(CFG_KEY,JSON.stringify(c))}
+function pref(){return (cfg&&cfg.modePref)||"auto"}
 
 function wsUrl(base){
   base=(base||"").trim();
@@ -242,10 +274,38 @@ function wsUrl(base){
 }
 function entityDomain(e){return (e||"").split(".")[0]||""}
 
-function setStatus(cls,txt){
-  $("dot").className="dot "+cls;
-  $("statusText").textContent=txt;
-  ["btnOn","btnOff"].forEach(b=>$(b).disabled=!(cls==="ok"));
+/* ---------- Status / Mode-UI ---------- */
+function setModeUI(m,note){
+  mode=m;
+  const d=$("dot"),t=$("statusText");
+  let onHint="—";
+  if(m===null){
+    d.className="dot";
+    t.textContent="Suche Pfad …";
+    ["btnOn","btnOff"].forEach(b=>$(b).disabled=true);
+    $("footBase").textContent="—";
+    $("modeNote").textContent=note||"";
+    return;
+  }
+  if(m==="lan"){
+    d.className="dot ok";
+    t.textContent="Zu Hause · LAN";
+    onHint="auch bei PC aus";
+  }else if(m==="remote"){
+    d.className="dot ok";
+    t.textContent="Remote · Relay";
+    onHint="nur bei PC an";
+  }else{
+    d.className="dot err";
+    t.textContent="Offline · kein Pfad";
+  }
+  $("modeNote").textContent=note||"";
+  $("subOn").textContent=onHint;
+  $("subOff").textContent="—";
+  ["btnOn","btnOff"].forEach(b=>$(b).disabled=(m!=="lan"&&m!=="remote"));
+  if(m==="lan")$("footBase").textContent="LAN: "+(cfg?cfg.lanBase:"");
+  else if(m==="remote")$("footBase").textContent="Relay: "+(cfg?cfg.base:"");
+  else $("footBase").textContent="—";
 }
 
 function fmtTs(iso){
@@ -270,24 +330,14 @@ function onStateMessage(m){
   const id=st.entity_id;
   if(id===cfg.on||id===cfg.off){
     stateCache[id]=st;
-    if(id===cfg.on){showEntity(id,$("fnOn"),$("tsOn"));$("subOn").textContent="Gesendet"}
-    else{showEntity(id,$("fnOff"),$("tsOff"));$("subOff").textContent="Gesendet"}
+    if(id===cfg.on)showEntity(id,$("fnOn"),$("tsOn"));
+    else showEntity(id,$("fnOff"),$("tsOff"));
   }
 }
 
-function onOpen(){
-  ws.send(JSON.stringify({type:"auth",access_token:cfg.token}));
-}
 function onMessage(ev){
   let m;try{m=JSON.parse(ev.data)}catch(e){return}
-  if(m.type==="auth_ok"){
-    connected=true;
-    setStatus("ok","Verbunden");
-    refreshStates();
-    ws.send(JSON.stringify({id:++idc,type:"subscribe_events",event_type:"state_changed"}));
-  }else if(m.type==="auth_invalid"){
-    setStatus("err","Token ungültig");
-  }else if(m.id&&pending.has(m.id)){
+  if(m.id&&pending.has(m.id)){
     const p=pending.get(m.id);pending.delete(m.id);
     m.success?p.resolve(m.result):p.reject(new Error(m.error&&m.error.message||"Fehler"));
   }else{
@@ -297,27 +347,102 @@ function onMessage(ev){
 function onClose(){
   connected=false;
   if(!cfg)return;
-  setStatus("err","Verbindung getrennt");
+  $("modeNote").textContent="verbinde neu …";
   clearTimeout(reconnectTimer);
-  reconnectTimer=setTimeout(connect,2500);
+  reconnectTimer=setTimeout(selectMode,2500);
 }
 
-function connect(){
+/* ---------- Pfad-Probe ---------- */
+/* rawWs: WebSocket öffnen + HA-Auth — löst mit dem authifizierten Socket auf.
+   Timer wird bei Erfolg geklärt, damit der Socket später nicht sterben kann. */
+function rawWs(url,token,timeoutMs){
+  return new Promise((resolve,reject)=>{
+    const t=new WebSocket(url);
+    const timer=setTimeout(()=>{try{t.close()}catch(e){}reject(new Error("Timeout"))},timeoutMs);
+    const done=(fn)=>{clearTimeout(timer);fn()};
+    t.onopen=()=>t.send(JSON.stringify({type:"auth",access_token:token}));
+    t.onmessage=e=>{
+      let m;try{m=JSON.parse(e.data)}catch(x){return}
+      if(m.type==="auth_ok")done(()=>resolve(t));
+      else if(m.type==="auth_invalid")done(()=>{try{t.close()}catch(x){}reject(new Error("Token ungültig"))});
+    };
+    t.onerror=()=>done(()=>{try{t.close()}catch(x){}reject(new Error("Keine Verbindung"))});
+  });
+}
+function probeLan(){
+  if(!cfg||!cfg.lanBase)return Promise.resolve(null);
+  return rawWs(wsUrl(cfg.lanBase),cfg.token,3000).catch(()=>null);
+}
+function probeRemote(){
+  if(!cfg||!cfg.base)return Promise.resolve(null);
+  return rawWs(wsUrl(cfg.base),cfg.token,4000).catch(()=>null);
+}
+
+/* Socket übernehmen: Auth lief in der Probe, hier nur noch anbinden. */
+function adoptSocket(t,m){
+  if(ws&&ws!==t){try{ws.onclose=null;ws.onmessage=null;ws.close()}catch(e){}}
+  ws=t;connected=true;
+  t.onopen=null;
+  t.onmessage=onMessage;
+  t.onclose=onClose;
+  setModeUI(m);
+  refreshStates();
+  ws.send(JSON.stringify({id:++idc,type:"subscribe_events",event_type:"state_changed"}));
+}
+
+/* Modus wählen: LAN hat Vorrang (läuft immer, wenn zu Hause), dann Relay. */
+async function selectMode(){
+  if(!cfg)return;
   clearTimeout(reconnectTimer);
-  if(ws){try{ws.onclose=null;ws.close()}catch(e){}}
-  ws=null;
-  const url=wsUrl(cfg.base);
-  // HTTPS-Seite + ws:// = vom Browser blockiert (Mixed Content) — sofort melden, nicht endlos retryn
-  if(location.protocol==="https:"&&url.startsWith("ws://")){
-    setStatus("err","Blockiert: HTTPS-Seite darf keine unsichere ws://-Verbindung öffnen. Bitte eine https://-HA-Adresse eingeben (z. B. Tailscale-Addon mit TLS)");
+  const p=pref();
+  if(p!=="remote"){
+    setModeUI(null,"suche Pfad …");
+    const s=await probeLan();
+    if(s){adoptSocket(s,"lan");return}
+  }
+  if(p!=="lan"){
+    if(!cfg)return; // UI könnte zwischendurch umgestellt sein
+    setModeUI(null,"suche Pfad …");
+    const s=await probeRemote();
+    if(s){adoptSocket(s,"remote");return}
+  }
+  if(ws){try{ws.onclose=null;ws.close()}catch(e){}ws=null}
+  connected=false;
+  const note=(p==="auto")?"LAN und Relay nicht erreichbar":(p==="lan")?"Heim-Netz nicht erreichbar":"Relay nicht erreichbar";
+  setModeUI("offline",note);
+}
+
+/* Watchdog: Netzwerkwechsel bemerken (WLAN<->Mobilfunk, App aufgeweckt, offline->recovery). */
+async function watchdogTick(){
+  if(!cfg)return;
+  const p=pref();
+  if(mode==="lan"||p==="remote")return;
+  if(mode==="remote"){
+    // Remote läuft — nur prüfen, ob LAN verfügbar wurde
+    const s=await probeLan();
+    if(s)adoptSocket(s,"lan");
     return;
   }
-  setStatus("warn","Verbinde …");
-  try{ws=new WebSocket(url)}
-  catch(e){setStatus("err","Ungültige Adresse");return}
-  ws.onopen=onOpen;ws.onmessage=onMessage;ws.onclose=onClose;
+  // Offline: beide Pfade neu versuchen
+  if(p!=="remote"){
+    const s=await probeLan();
+    if(s){adoptSocket(s,"lan");return}
+  }
+  if(p!=="lan"){
+    const s=await probeRemote();
+    if(s){adoptSocket(s,"remote");return}
+  }
 }
+function startWatchdog(){
+  clearInterval(probeTimer);
+  probeTimer=setInterval(watchdogTick,20000);
+}
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible")watchdogTick();
+});
+window.addEventListener("focus",watchdogTick);
 
+/* ---------- HA-Requests ---------- */
 function wsRequest(type,payload){
   return new Promise((resolve,reject)=>{
     const id=++idc;
@@ -335,7 +460,8 @@ async function refreshStates(){
     }
     showEntity(cfg.on,$("fnOn"),$("tsOn"));
     showEntity(cfg.off,$("fnOff"),$("tsOff"));
-    $("subOn").textContent="—";$("subOff").textContent="—";
+    $("subOn").textContent=mode==="lan"?"auch bei PC aus":mode==="remote"?"nur bei PC an":"—";
+    $("subOff").textContent="—";
   }catch(e){}
 }
 
@@ -346,12 +472,13 @@ async function press(entity,subEl){
   subEl.textContent="…";
   try{
     await wsRequest("call_service",{domain:dom,service:"press",service_data:{entity_id:entity}});
+    subEl.textContent="Gesendet";
   }catch(e){
     subEl.textContent="Fehler";
-    setTimeout(()=>{subEl.textContent="—"},4000);
-    return;
   }
-  setTimeout(()=>{subEl.textContent="—"},4000);
+  setTimeout(()=>{
+    subEl.textContent=(entity===cfg.on)?(mode==="lan"?"auch bei PC aus":mode==="remote"?"nur bei PC an":"—"):"—";
+  },4000);
 }
 
 /* ---------- setup UI ---------- */
@@ -360,68 +487,79 @@ function showSetup(){
   $("main").style.display="none";
   $("foot").style.display="none";
   if(cfg){
-    $("fBase").value=cfg.base;
-    $("fToken").value=cfg.token;
-    $("fOn").value=cfg.on;
-    $("fOff").value=cfg.off;
+    $("fLan").value=cfg.lanBase||"";
+    $("fBase").value=cfg.base||"";
+    $("fToken").value=cfg.token||"";
+    $("fOn").value=cfg.on||"";
+    $("fOff").value=cfg.off||"";
+    $("fMode").value=pref();
   }
 }
 function showMain(){
   $("setup").classList.remove("show");
   $("main").style.display="flex";
   $("foot").style.display="flex";
-  $("footBase").textContent=cfg?cfg.base:"";
 }
 
-function rawWs(url,token,timeoutMs){
-  return new Promise((resolve,reject)=>{
-    const t=new WebSocket(url);
-    const timer=setTimeout(()=>{try{t.close()}catch(e){}reject(new Error("Timeout"))},timeoutMs);
-    t.onopen=()=>t.send(JSON.stringify({type:"auth",access_token:token}));
-    t.onmessage=e=>{
-      let m;try{m=JSON.parse(e.data)}catch(x){return}
-      if(m.type==="auth_ok")resolve(t);
-      else if(m.type==="auth_invalid"){clearTimeout(timer);try{t.close()}catch(x){}reject(new Error("Token ungültig"))}
-    };
-    t.onerror=()=>{clearTimeout(timer);try{t.close()}catch(x){}reject(new Error("Keine Verbindung"))};
-  });
+/* Endpoint prüfen: WS + Auth + beide Entities müssen existieren. */
+async function probeEndpoint(url,token,entities){
+  const t=await rawWs(url,token,6000);
+  try{
+    const res=await new Promise((resolve,reject)=>{
+      const h=e=>{
+        let m;try{m=JSON.parse(e.data)}catch(x){return}
+        if(m.id===9001){t.onmessage=null;m.success?resolve(m.result):reject(new Error("get_states fehlgeschlagen"))}
+      };
+      t.onmessage=h;
+      t.send(JSON.stringify({id:9001,type:"get_states"}));
+      setTimeout(()=>reject(new Error("Timeout")),8000);
+    });
+    for(const e of entities){
+      const dom=entityDomain(e);
+      if(dom!=="button"&&dom!=="input_button")throw new Error("Entity \""+e+"\": Domain "+dom+" (erwartet: button / input_button)");
+      if(!res.find(s=>s.entity_id===e))throw new Error("Entity nicht gefunden: "+e);
+    }
+  }finally{
+    try{t.close()}catch(e){}
+  }
 }
 
 async function doTest(){
-  const base=$("fBase").value.trim(),token=$("fToken").value.trim(),
+  const lan=$("fLan").value.trim(),base=$("fBase").value.trim(),token=$("fToken").value.trim(),
         on=$("fOn").value.trim(),off=$("fOff").value.trim(),
+        mpref=$("fMode").value,
         msg=$("testmsg");
   msg.className="testmsg";
-  if(!base||!token||!on||!off){msg.textContent="Alle Felder ausfüllen.";msg.classList.add("err");return}
+  if(!token||!on||!off){msg.textContent="Token und beide Entities ausfüllen.";msg.classList.add("err");return}
+  if(!lan&&!base){msg.textContent="Mindestens eine Adresse angeben (LAN und/oder Relay).";msg.classList.add("err");return}
   $("btnTest").disabled=true;
-  msg.textContent="Verbinde …";
+  msg.textContent="Prüfe Verbindungen …";
   try{
-    const url=wsUrl(base);
-    const t=await rawWs(url,token,10000);
-    try{
-      const res=await new Promise((resolve,reject)=>{
-        const id=1;
-        t.send(JSON.stringify({id,type:"get_states"}));
-        t.onmessage=e=>{
-          let m;try{m=JSON.parse(e.data)}catch(x){return}
-          if(m.id===id){m.success?resolve(m.result):reject(new Error("get_states fehlgeschlagen"))}
-        };
-        setTimeout(()=>reject(new Error("Timeout")),10000);
-      });
-      for(const e of [on,off]){
-        const dom=entityDomain(e);
-        if(dom!=="button"&&dom!=="input_button")throw new Error("Entity \""+e+"\": Domain "+dom+" (erwartet: button / input_button)");
-        if(!res.find(s=>s.entity_id===e))throw new Error("Entity nicht gefunden: "+e);
-      }
-    }finally{try{t.close()}catch(e){}}
-    const testCfg={base,token,on,off};
+    const results=[];
+    let anyOk=false;
+    if(lan){
+      await probeEndpoint(wsUrl(lan),token,[on,off]);
+      anyOk=true;results.push("LAN: verbunden");
+    }catch(e){
+      if(!anyOk)results.push("LAN: "+e.message);
+      else results.push("LAN: nicht erreichbar");
+    }
+    if(base){
+      if(!anyOk){
+        await probeEndpoint(wsUrl(base),token,[on,off]);
+        anyOk=true;results.push("Relay: verbunden");
+      }else results.push("Relay: nicht geprüft");
+    }
+    if(!anyOk)throw new Error(results.join(", "));
+    const testCfg={lanBase:lan,base,token,on,off,modePref:mpref};
     saveCfg(testCfg);cfg=testCfg;
-    msg.textContent="Verbunden — beide Entities gefunden.";
+    msg.textContent="Verbunden — Entities gefunden. ("+results.join(", ")+")";
     msg.classList.add("ok");
     showMain();
-    connect();
+    startWatchdog();
+    selectMode();
   }catch(e){
-    msg.textContent=e.message||String(e);
+    msg.textContent=(e.message||String(e))+" — mindestens eine Adresse muss erreichbar sein.";
     msg.classList.add("err");
   }finally{
     $("btnTest").disabled=false;
@@ -429,7 +567,7 @@ async function doTest(){
 }
 
 /* ---------- Setup per Link (?cfg=Base64-JSON) ---------- */
-// Ermöglicht Einrichtung ohne Tippen: Link/QR mit {base,token,on,off} öffnen.
+// Ermöglicht Einrichtung ohne Tippen: Link/QR mit {lanBase,base,token,on,off,modePref} öffnen.
 // Wird NUR in die Felder gelegt — gespeichert erst nach SPEICHERN & VERBINDEN.
 function applyCfgFromUrl(){
   try{
@@ -437,18 +575,20 @@ function applyCfgFromUrl(){
     if(!q)return;
     const raw=atob(q.replace(/-/g,"+").replace(/_/g,"/"));
     const c=JSON.parse(raw);
-    if(!c||!c.base||!c.token)return;
+    if(!c||!c.token)return;
     showSetup();
-    $("fBase").value=c.base;
+    if(c.lanBase)$("fLan").value=c.lanBase;
+    if(c.base)$("fBase").value=c.base;
     $("fToken").value=c.token;
     if(c.on)$("fOn").value=c.on;
     if(c.off)$("fOff").value=c.off;
+    if(c.modePref)$("fMode").value=c.modePref;
   }catch(e){}
 }
 
 /* ---------- init ---------- */
 cfg=loadCfg();
-if(cfg){showMain();connect()}else{showSetup()}
+if(cfg){showMain();startWatchdog();selectMode()}else{showSetup()}
 applyCfgFromUrl();
 $("btnTest").onclick=doTest;
 $("btnSetup").onclick=showSetup;
