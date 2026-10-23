@@ -1,9 +1,9 @@
 {
-  "pwa_version": "1.2.0",
+  "pwa_version": "1.2.2",
   "apk": {
-    "version_name": "1.2.1",
-    "version_code": 4,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v1.2.1.apk",
+    "version_name": "1.2.3",
+    "version_code": 6,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v1.2.3.apk",
     "notes": "Self-Update: Update-Button in der App, Einstellungen bleiben erhalten"
   }
 }
