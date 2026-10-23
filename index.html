@@ -538,11 +538,12 @@ async function doTest(){
     const results=[];
     let anyOk=false;
     if(lan){
-      await probeEndpoint(wsUrl(lan),token,[on,off]);
-      anyOk=true;results.push("LAN: verbunden");
-    }catch(e){
-      if(!anyOk)results.push("LAN: "+e.message);
-      else results.push("LAN: nicht erreichbar");
+      try{
+        await probeEndpoint(wsUrl(lan),token,[on,off]);
+        anyOk=true;results.push("LAN: verbunden");
+      }catch(e){
+        results.push("LAN: "+(e.message||"nicht erreichbar"));
+      }
     }
     if(base){
       if(!anyOk){
