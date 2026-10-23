@@ -569,7 +569,25 @@ async function doTest(){
 
 /* ---------- Setup per Link (?cfg=Base64-JSON) ---------- */
 // Ermöglicht Einrichtung ohne Tippen: Link/QR mit {lanBase,base,token,on,off,modePref} öffnen.
-// Wird NUR in die Felder gelegt — gespeichert erst nach SPEICHERN & VERBINDEN.
+// Füllt die Felder — gespeichert erst nach SPEICHERN & VERBINDEN.
+// &autoconnect=1: direkt speichern & verbinden (One-Tap-Setup, z. B. HA-Automation).
+// &press=on|off: nach Verbindung den entsprechenden Button auslösen (z. B. aus HA).
+function autoPress(){
+  try{
+    const q=new URLSearchParams(location.search);
+    const p=q.get("press");
+    if(p!=="on"&&p!=="off")return;
+    const entity=p==="on"?cfg.on:cfg.off;
+    if(!entity)return;
+    history.replaceState(null,"",location.pathname);
+    let tries=0;
+    const t=setInterval(()=>{
+      tries++;
+      if(connected)clearInterval(t),press(entity,p==="on"?$("subOn"):$("subOff"));
+      else if(tries>30)clearInterval(t); // ~30s Warten auf Pfad
+    },1000);
+  }catch(e){}
+}
 function applyCfgFromUrl(){
   try{
     const q=new URLSearchParams(location.search).get("cfg");
@@ -584,12 +602,18 @@ function applyCfgFromUrl(){
     if(c.on)$("fOn").value=c.on;
     if(c.off)$("fOff").value=c.off;
     if(c.modePref)$("fMode").value=c.modePref;
+    if(new URLSearchParams(location.search).get("autoconnect")==="1"
+       &&c.on&&c.off&&(c.lanBase||c.base)){
+      history.replaceState(null,"",location.pathname);
+      doTest();
+      autoPress(); // z. B. ?cfg=...&autoconnect=1&press=on
+    }
   }catch(e){}
 }
 
 /* ---------- init ---------- */
 cfg=loadCfg();
-if(cfg){showMain();startWatchdog();selectMode()}else{showSetup()}
+if(cfg){showMain();startWatchdog();selectMode();autoPress()}else{showSetup()}
 applyCfgFromUrl();
 $("btnTest").onclick=doTest;
 $("btnSetup").onclick=showSetup;
