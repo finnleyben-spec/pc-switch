@@ -3,6 +3,14 @@
     "version_name": "2.0.4",
     "version_code": 16,
     "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.4.apk",
-    "notes": "v2.0.4: Update-Flow Fix."
+    "notes": "v2.0.4: Update-Flow Fix.",
+    "changelog": [
+      {"version": "2.0.4", "date": "2026-10-23", "notes": "Update-Flow Fix."},
+      {"version": "2.0.3", "date": "2026-10-23", "notes": "VPN-Detection Fix, Power-Toggle Switch, Version-Display in Settings"},
+      {"version": "2.0.2", "date": "2026-10-23", "notes": "Dark Cyber Gothic Design, Squircles, Glassmorphism, Back-Button Fix, Update-Button Animation"},
+      {"version": "2.0.1", "date": "2026-10-23", "notes": "Connect-to-Home bei Offline und Remote, Heimnetz-Trennen bei VPN, Entity-Cards entfernt, Update-Button in Einstellungen"},
+      {"version": "2.0.0", "date": "2026-10-23", "notes": "APK-only, PWA removed. Native Android app with Connect-to-Home, HA-WebSocket client, self-update."},
+      {"version": "1.2.8", "date": "2026-10-23", "notes": "APK mit clearCache-on-cold-start (stale SW blockierte Update-Button)"}
+    ]
   }
 }
