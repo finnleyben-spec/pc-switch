@@ -658,8 +658,12 @@ async function checkForUpdate(){
       btn.textContent="Update · "+(remote.apk.version_name||"neu");
       btn.style.display="";
       btn.onclick=()=>{
-        if(confirm("PC Switch "+(remote.apk.version_name||"")+" herunterladen?\n\nDeine Einstellungen bleiben nach dem Update erhalten."))
-          location.href=remote.apk.url;
+        if(confirm("PC Switch "+(remote.apk.version_name||"")+" herunterladen?\n\nDeine Einstellungen bleiben nach dem Update erhalten.")){
+          if(window.PcSwitch&&window.PcSwitch.startApkDownload)
+            window.PcSwitch.startApkDownload(remote.apk.url); // deterministisch: kein SW/Navigation-Timing
+          else
+            location.href=remote.apk.url; // Fallback: nativer Download
+        }
       };
     }else btn.style.display="none";
   }else if(remote&&remote.pwa_version&&remote.pwa_version!==PWA_VERSION){
