@@ -37,6 +37,14 @@
   }
   h1{font-size:22px;font-weight:500;letter-spacing:.02em}
   .ver{font-size:11px;color:var(--ink-soft);letter-spacing:.08em}
+  .verwrap{display:flex;align-items:center;gap:12px}
+  .btn-update{
+    appearance:none;border:none;cursor:pointer;
+    padding:6px 12px;border-radius:999px;
+    background:var(--accent);color:var(--paper);
+    font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+  }
+  .btn-update:active{opacity:.75}
 
   .rule{height:1px;background:var(--line);margin:18px 28px 0}
 
@@ -145,7 +153,10 @@
 
 <header>
   <h1 class="serif">PC Switch</h1>
-  <span class="ver">v1.1.0</span>
+  <span class="verwrap">
+    <span class="ver">v1.2.0</span>
+    <button class="btn-update" id="btnUpdate" style="display:none">Update</button>
+  </span>
 </header>
 <div class="rule"></div>
 
@@ -250,6 +261,13 @@
 <script>
 "use strict";
 const CFG_KEY="pcswitch.cfg.v1";
+const PWA_VERSION="1.2.0";
+/* Update-Check: Der APK-Wrapper injiziert ?apk=<versionName>&vc=<versionCode> in
+   die PWA-URL. VOR history.replaceState auslesen (autoPress/applyCfgFromUrl
+   löschen den Querystring). */
+const _q0=new URLSearchParams(location.search);
+const APK_MODE=/;\s*wv\)/i.test(navigator.userAgent); // Android-WebView, nicht Browser
+const APK_VC=_q0.get("vc");
 const $=id=>document.getElementById(id);
 let ws=null, idc=0, pending=new Map(), connected=false, reconnectTimer=null, probeTimer=null, cfg=null;
 let mode=null; // "lan" | "remote" | "offline"
@@ -611,10 +629,64 @@ function applyCfgFromUrl(){
   }catch(e){}
 }
 
+/* ---------- App-Update (version.json auf GitHub Pages) ---------- */
+/* version.json ist die Single Source of Truth (liegt neben index.html):
+   { "pwa_version": "x.y.z",
+     "apk": { "version_name": "x.y.z", "version_code": N, "url": "…/pc-switch-vX.apk" } }
+   - APK-Modus (WebView): neues version_code → Button lädt das APK, Android installiert
+     es. Settings (localStorage der WebView) bleiben erhalten — gleicher Package-Name.
+     Alte Wrapper ohne vc-Param: WebView-User-Agent als Fallback, Update immer anbieten,
+     Button verschwindet nach dem Update von selbst (neuer Wrapper liefert vc).
+   - PWA/Browser: pwa_version neu → SW aktualisieren, Caches leeren, Reload.
+     localStorage bleibt erhalten. */
+let lastUpdateCheck=0;
+async function checkForUpdate(){
+  const now=Date.now();
+  if(now-lastUpdateCheck<300000)return;
+  lastUpdateCheck=now;
+  let remote;
+  try{
+    const res=await fetch("version.json",{cache:"no-store"});
+    if(!res.ok)return;
+    remote=await res.json();
+  }catch(e){return} // offline → still
+  const btn=$("btnUpdate");
+  if(!btn)return;
+  if(APK_MODE&&remote&&remote.apk&&remote.apk.url){
+    const newer=!APK_VC||Number(remote.apk.version_code)>Number(APK_VC);
+    if(newer){
+      btn.textContent="Update · "+(remote.apk.version_name||"neu");
+      btn.style.display="";
+      btn.onclick=()=>{
+        if(confirm("PC Switch "+(remote.apk.version_name||"")+" herunterladen?\n\nDeine Einstellungen bleiben nach dem Update erhalten."))
+          location.href=remote.apk.url;
+      };
+    }else btn.style.display="none";
+  }else if(remote&&remote.pwa_version&&remote.pwa_version!==PWA_VERSION){
+    btn.textContent="Update · "+remote.pwa_version;
+    btn.style.display="";
+    btn.onclick=async()=>{
+      try{
+        if("serviceWorker" in navigator){
+          const reg=await navigator.serviceWorker.getRegistration();
+          if(reg){try{await reg.update()}catch(e){}await reg.unregister()}
+          const keys=await caches.keys();
+          await Promise.all(keys.map(k=>caches.delete(k)));
+        }
+      }catch(e){}
+      location.reload();
+    };
+  }else btn.style.display="none";
+}
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible")checkForUpdate();
+});
+
 /* ---------- init ---------- */
 cfg=loadCfg();
 if(cfg){showMain();startWatchdog();selectMode();autoPress()}else{showSetup()}
 applyCfgFromUrl();
+checkForUpdate();
 $("btnTest").onclick=doTest;
 $("btnSetup").onclick=showSetup;
 $("btnOn").onclick=()=>press(cfg.on,$("subOn"));
