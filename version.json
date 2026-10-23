@@ -1,10 +1,11 @@
 {
   "apk": {
-    "version_name": "2.0.4",
-    "version_code": 16,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.4.apk",
-    "notes": "v2.0.4: Update-Flow Fix.",
+    "version_name": "2.0.5",
+    "version_code": 17,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.5.apk",
+    "notes": "v2.0.5: SettingsScreen mit Update-Prüfung, Versions-Anzeige, Changelog-Dialog, Retry-Button, Rollback-Support.",
     "changelog": [
+      {"version": "2.0.5", "date": "2026-10-23", "notes": "SettingsScreen mit Update-Prüfung, Versions-Anzeige, Changelog-Dialog, Retry-Button, Rollback-Support."},
       {"version": "2.0.4", "date": "2026-10-23", "notes": "Update-Flow Fix."},
       {"version": "2.0.3", "date": "2026-10-23", "notes": "VPN-Detection Fix, Power-Toggle Switch, Version-Display in Settings"},
       {"version": "2.0.2", "date": "2026-10-23", "notes": "Dark Cyber Gothic Design, Squircles, Glassmorphism, Back-Button Fix, Update-Button Animation"},
