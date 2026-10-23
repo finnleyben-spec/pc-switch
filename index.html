@@ -572,12 +572,11 @@ async function doTest(){
 // Füllt die Felder — gespeichert erst nach SPEICHERN & VERBINDEN.
 // &autoconnect=1: direkt speichern & verbinden (One-Tap-Setup, z. B. HA-Automation).
 // &press=on|off: nach Verbindung den entsprechenden Button auslösen (z. B. aus HA).
-function autoPress(){
+function autoPress(forced,entityOverride){
   try{
-    const q=new URLSearchParams(location.search);
-    const p=q.get("press");
+    const p=forced||new URLSearchParams(location.search).get("press");
     if(p!=="on"&&p!=="off")return;
-    const entity=p==="on"?cfg.on:cfg.off;
+    const entity=entityOverride||(p==="on"?cfg.on:cfg.off);
     if(!entity)return;
     history.replaceState(null,"",location.pathname);
     let tries=0;
@@ -604,9 +603,10 @@ function applyCfgFromUrl(){
     if(c.modePref)$("fMode").value=c.modePref;
     if(new URLSearchParams(location.search).get("autoconnect")==="1"
        &&c.on&&c.off&&(c.lanBase||c.base)){
+      const p=new URLSearchParams(location.search).get("press");
       history.replaceState(null,"",location.pathname);
       doTest();
-      autoPress(); // z. B. ?cfg=...&autoconnect=1&press=on
+      if(p==="on"||p==="off")autoPress(p,p==="on"?c.on:c.off);
     }
   }catch(e){}
 }
