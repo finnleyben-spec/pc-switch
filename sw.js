@@ -19,6 +19,9 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== "GET" || url.origin !== self.location.origin) return;
+  // Update-APK: nie cachen/intercepten — die WebView braucht den nativen
+  // Download-Flow (application/vnd.android.package-archive).
+  if (url.pathname.endsWith(".apk")) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {
