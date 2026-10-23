@@ -1,9 +1,9 @@
 {
   "pwa_version": "1.2.8",
   "apk": {
-    "version_name": "1.2.7",
-    "version_code": 10,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v1.2.7.apk",
-    "notes": "Self-Update fix: Download nach filesDir/apk, FileProvider korrigiert, Toast thread-sicher"
+    "version_name": "1.2.8",
+    "version_code": 11,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v1.2.8.apk",
+    "notes": "Cold Start: WebView-HTTP-Cache leeren (stale Service Worker blockierte sonst den Update-Button); frischer Inhalt + frischer sw.js garantiert"
   }
 }
