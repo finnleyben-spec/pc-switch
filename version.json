@@ -1,9 +1,9 @@
 {
-  "pwa_version": "1.2.4",
+  "pwa_version": "1.2.6",
   "apk": {
-    "version_name": "1.2.5",
-    "version_code": 8,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v1.2.5.apk",
-    "notes": "Self-Update fix: Download nach filesDir/apk, FileProvider-Pfad korrigiert"
+    "version_name": "1.2.7",
+    "version_code": 10,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v1.2.7.apk",
+    "notes": "Self-Update fix: Download nach filesDir/apk, FileProvider korrigiert, Toast thread-sicher"
   }
 }
