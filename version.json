@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.4.1",
-    "version_code": 32,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.1.apk",
-    "notes": "v2.4.1: Fixed toggle button for light/switch entities (use toggle service instead of press).",
+    "version_name": "2.4.2",
+    "version_code": 33,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.2-signed.apk",
+    "notes": "v2.4.2: Fixed WebSocket call_service protocol — all button presses now work correctly.",
     "changelog": [
+      {
+        "version": "2.4.2",
+        "date": "2026-10-24",
+        "notes": "Fixed WebSocket call_service protocol — all button presses now work correctly."
+      },
       {
         "version": "2.4.1",
         "date": "2026-10-24",
