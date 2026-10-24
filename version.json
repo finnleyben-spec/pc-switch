@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.4.3",
-    "version_code": 34,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.3-signed.apk",
-    "notes": "v2.4.3: Faster status updates — watchdog 5s, PC status check 10s.",
+    "version_name": "2.4.4",
+    "version_code": 35,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.4-signed.apk",
+    "notes": "v2.4.4: PC status check on VPN connect, no flicker on app open, Unklar status when offline, single status indicator, unified toggle design.",
     "changelog": [
+      {
+        "version": "2.4.4",
+        "date": "2026-10-24",
+        "notes": "PC status check immediately on VPN connect, no PC status flicker on app open, Unklar status when offline, single status indicator above switch, unified toggle design for all switches."
+      },
       {
         "version": "2.4.3",
         "date": "2026-10-24",
