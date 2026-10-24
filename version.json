@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.4.2",
-    "version_code": 33,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.2-signed.apk",
-    "notes": "v2.4.2: Fixed WebSocket call_service protocol — all button presses now work correctly.",
+    "version_name": "2.4.3",
+    "version_code": 34,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.3-signed.apk",
+    "notes": "v2.4.3: Faster status updates — watchdog 5s, PC status check 10s.",
     "changelog": [
+      {
+        "version": "2.4.3",
+        "date": "2026-10-24",
+        "notes": "Faster status updates — watchdog 5s, PC status check 10s."
+      },
       {
         "version": "2.4.2",
         "date": "2026-10-24",
