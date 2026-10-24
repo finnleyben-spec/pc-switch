@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.1.3",
-    "version_code": 26,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.1.3.apk",
-    "notes": "v2.1.3: Instant VPN disconnect — probe immediately after disconnect, no 3s delay.",
+    "version_name": "2.2.0",
+    "version_code": 27,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.2.0.apk",
+    "notes": "v2.2.0: Multi-switch support — configure multiple switches with toggle/dual types, carousel on main screen, drag & drop sorting.",
     "changelog": [
+      {
+        "version": "2.2.0",
+        "date": "2026-10-24",
+        "notes": "Multi-switch support — configure multiple switches with toggle/dual types, carousel on main screen, drag & drop sorting."
+      },
       {
         "version": "2.1.3",
         "date": "2026-10-24",
