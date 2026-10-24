@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.4.6",
-    "version_code": 37,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.6-signed.apk",
-    "notes": "v2.4.6: Fixed footer button design with inner-rounded corners and gap.",
+    "version_name": "2.4.7",
+    "version_code": 38,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.7-signed.apk",
+    "notes": "v2.4.7: Footer buttons now touch display edges with no outer border.",
     "changelog": [
+      {
+        "version": "2.4.7",
+        "date": "2026-10-24",
+        "notes": "Footer buttons now extend to display edges with no outer border."
+      },
       {
         "version": "2.4.6",
         "date": "2026-10-24",
