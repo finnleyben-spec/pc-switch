@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.0.10",
-    "version_code": 22,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.0.10.apk",
-    "notes": "v2.0.10: Verbesserte Lesbarkeit (hellerer Text, dunklere GlassCards).",
+    "version_name": "2.1.0",
+    "version_code": 23,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.1.0.apk",
+    "notes": "v2.1.0: Token Visibility Toggle mit pixel-art gothic eye icon.",
     "changelog": [
+      {
+        "version": "2.1.0",
+        "date": "2026-10-24",
+        "notes": "Token Visibility Toggle mit pixel-art gothic eye icon."
+      },
       {
         "version": "2.0.10",
         "date": "2026-10-23",
