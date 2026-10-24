@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.4.5",
-    "version_code": 36,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.5-signed.apk",
-    "notes": "v2.4.5: No status under VPN, unified toggle design, PC status check on toggle, improved footer design.",
+    "version_name": "2.4.6",
+    "version_code": 37,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.6-signed.apk",
+    "notes": "v2.4.6: Fixed footer button design with inner-rounded corners and gap.",
     "changelog": [
+      {
+        "version": "2.4.6",
+        "date": "2026-10-24",
+        "notes": "Footer buttons now have inner-rounded corners (toward the gap) with a centered gap between them."
+      },
       {
         "version": "2.4.5",
         "date": "2026-10-24",
