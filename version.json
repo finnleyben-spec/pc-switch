@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.2.2",
-    "version_code": 29,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.2.2.apk",
-    "notes": "v2.2.2: Restored old settings screen alongside new switch list screen.",
+    "version_name": "2.3.0",
+    "version_code": 30,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.3.0.apk",
+    "notes": "v2.3.0: Dynamic status display via WebSocket, real-time An/Aus status, state entity support.",
     "changelog": [
+      {
+        "version": "2.3.0",
+        "date": "2026-10-24",
+        "notes": "Dynamic status display via WebSocket, real-time An/Aus status, state entity support."
+      },
       {
         "version": "2.2.2",
         "date": "2026-10-24",
