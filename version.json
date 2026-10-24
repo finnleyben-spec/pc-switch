@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.2.1",
-    "version_code": 28,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.2.1.apk",
-    "notes": "v2.2.1: Fixed settings navigation and VPN disconnect Toast crash.",
+    "version_name": "2.2.2",
+    "version_code": 29,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.2.2.apk",
+    "notes": "v2.2.2: Restored old settings screen alongside new switch list screen.",
     "changelog": [
+      {
+        "version": "2.2.2",
+        "date": "2026-10-24",
+        "notes": "Restored old settings screen alongside new switch list screen."
+      },
       {
         "version": "2.2.1",
         "date": "2026-10-24",
