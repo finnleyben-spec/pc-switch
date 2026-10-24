@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.1.0",
-    "version_code": 23,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.1.0.apk",
-    "notes": "v2.1.0: Token Visibility Toggle mit pixel-art gothic eye icon.",
+    "version_name": "2.1.1",
+    "version_code": 24,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.1.1.apk",
+    "notes": "v2.1.1: VPN detection fix — shows VPN badge when OpenVPN active, disconnect button always visible.",
     "changelog": [
+      {
+        "version": "2.1.1",
+        "date": "2026-10-24",
+        "notes": "VPN detection fix — shows VPN badge when OpenVPN active, disconnect button always visible."
+      },
       {
         "version": "2.1.0",
         "date": "2026-10-24",
