@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.4.0",
-    "version_code": 31,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.0.apk",
-    "notes": "v2.4.0: Direct PC status check via network (TCP socket), no HA dependency for PC status.",
+    "version_name": "2.4.1",
+    "version_code": 32,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.1.apk",
+    "notes": "v2.4.1: Fixed toggle button for light/switch entities (use toggle service instead of press).",
     "changelog": [
+      {
+        "version": "2.4.1",
+        "date": "2026-10-24",
+        "notes": "Fixed toggle button for light/switch entities (use toggle service instead of press)."
+      },
       {
         "version": "2.4.0",
         "date": "2026-10-24",
