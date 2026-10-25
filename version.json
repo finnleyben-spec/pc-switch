@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.4.5",
-    "version_code": 41,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.5.apk",
-    "notes": "Opaque footer buttons + navigation slide animations.",
+    "version_name": "2.4.6",
+    "version_code": 42,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.6.apk",
+    "notes": "Footer buttons at 40% opacity + back button navigation in Settings/Switches.",
     "changelog": [
+      {
+        "version": "2.4.6",
+        "date": "2026-10-25",
+        "notes": "Footer buttons at 40% opacity + back button navigation in Settings/Switches."
+      },
       {
         "version": "2.4.5",
         "date": "2026-10-25",
