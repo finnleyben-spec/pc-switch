@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.4.8",
-    "version_code": 39,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.8-signed.apk",
-    "notes": "v2.4.8: Footer buttons now reach display edges (removed bottom padding).",
+    "version_name": "2.4.5",
+    "version_code": 41,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.5.apk",
+    "notes": "Opaque footer buttons + navigation slide animations.",
     "changelog": [
+      {
+        "version": "2.4.5",
+        "date": "2026-10-25",
+        "notes": "Opaque footer buttons + navigation slide animations."
+      },
       {
         "version": "2.4.8",
         "date": "2026-10-24",
