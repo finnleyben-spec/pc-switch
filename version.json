@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.5.6",
-    "version_code": 53,
-    "url": "https://github.com/finnleyben-spec/pc-switch-android/releases/download/v2.5.6/pc-switch-android-v2.5.6.apk",
-    "notes": "Fix: APK alignment for Android installation",
+    "version_name": "2.5.7",
+    "version_code": 55,
+    "url": "https://github.com/finnleyben-spec/pc-switch-android/releases/download/v2.5.7/pc-switch-android-v2.5.7.apk",
+    "notes": "Fix: VersionCode bump to 54 (previous install conflict)",
     "changelog": [
+      {
+        "version": "2.5.7",
+        "date": "2026-10-26",
+        "notes": "Fix: VersionCode bump to 54 (previous install conflict)"
+      },
       {
         "version": "2.5.6",
         "date": "2026-10-26",
