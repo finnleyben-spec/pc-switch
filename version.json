@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.4.6",
-    "version_code": 42,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.4.6.apk",
-    "notes": "Footer buttons at 40% opacity + back button navigation in Settings/Switches.",
+    "version_name": "2.5.3",
+    "version_code": 51,
+    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.5.3.apk",
+    "notes": "Entity Search, Entity Type Icons, Deep Link Support, Quick Settings Tile, Notification Support, GitHub API update check.",
     "changelog": [
+      {
+        "version": "2.5.3",
+        "date": "2026-10-26",
+        "notes": "Entity Search, Entity Type Icons, Deep Link Support, Quick Settings Tile, Notification Support, GitHub API update check."
+      },
       {
         "version": "2.4.6",
         "date": "2026-10-25",
