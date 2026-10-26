@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.5.3",
-    "version_code": 51,
-    "url": "https://finnleyben-spec.github.io/pc-switch/dist/pc-switch-v2.5.3.apk",
-    "notes": "Entity Search, Entity Type Icons, Deep Link Support, Quick Settings Tile, Notification Support, GitHub API update check.",
+    "version_name": "2.5.4",
+    "version_code": 52,
+    "url": "https://github.com/finnleyben-spec/pc-switch-android/releases/download/v2.5.4/pc-switch-android-v2.5.4.apk",
+    "notes": "iOS-style slider toggle für alle Schalter",
     "changelog": [
+      {
+        "version": "2.5.4",
+        "date": "2026-10-26",
+        "notes": "iOS-style slider toggle für alle Schalter"
+      },
       {
         "version": "2.5.3",
         "date": "2026-10-26",
