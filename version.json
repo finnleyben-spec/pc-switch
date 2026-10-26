@@ -1,14 +1,14 @@
 {
   "apk": {
-    "version_name": "2.5.7",
-    "version_code": 55,
-    "url": "https://github.com/finnleyben-spec/pc-switch-android/releases/download/v2.5.7/pc-switch-android-v2.5.7.apk",
-    "notes": "Fix: VersionCode bump to 54 (previous install conflict)",
+    "version_name": "2.5.8",
+    "version_code": 56,
+    "url": "https://github.com/finnleyben-spec/pc-switch-android/releases/download/v2.5.8/pc-switch-android-v2.5.8.apk",
+    "notes": "Fix: SHA-256 checksum validation for APK downloads",
     "changelog": [
       {
-        "version": "2.5.7",
+        "version": "2.5.8",
         "date": "2026-10-26",
-        "notes": "Fix: VersionCode bump to 54 (previous install conflict)"
+        "notes": "Fix: SHA-256 checksum validation for APK downloads"
       },
       {
         "version": "2.5.6",
