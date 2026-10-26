@@ -1,10 +1,15 @@
 {
   "apk": {
-    "version_name": "2.5.5",
+    "version_name": "2.5.6",
     "version_code": 53,
-    "url": "https://github.com/finnleyben-spec/pc-switch-android/releases/download/v2.5.5/pc-switch-android-v2.5.5.apk",
-    "notes": "Automated release test — iOS-style slider toggle for all switches",
+    "url": "https://github.com/finnleyben-spec/pc-switch-android/releases/download/v2.5.6/pc-switch-android-v2.5.6.apk",
+    "notes": "Fix: APK alignment for Android installation",
     "changelog": [
+      {
+        "version": "2.5.6",
+        "date": "2026-10-26",
+        "notes": "Fix: APK alignment for Android installation"
+      },
       {
         "version": "2.5.5",
         "date": "2026-10-26",
