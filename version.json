@@ -3,8 +3,13 @@
     "version_name": "2.9.0",
     "version_code": 75,
     "url": "https://github.com/finnleyben-spec/pc-switch-android/releases/download/v2.9.0/pc-switch-android-v2.9.0.apk",
-    "notes": "Gothic Cyber Redesign: blood-red accents, neon glow effects, pixel-art gothic icons, aggressive animations",
+    "notes": "Eventgesteuerte WLAN-/VPN-Statusanzeige, HA-WS-Subscribe statt Polling, robusterer HA-Client, deterministischer PC-Status, UI-Zeitstempel/Dimming",
     "changelog": [
+      {
+        "version": "2.9.0",
+        "date": "2026-11-11",
+        "notes": "Eventgesteuerte WLAN-/VPN-Statusanzeige, HA-WS-Subscribe statt Polling, robusterer HA-Client, deterministischer PC-Status, UI-Zeitstempel/Dimming."
+      },
       {
         "version": "2.8.0",
         "date": "2026-10-28",
